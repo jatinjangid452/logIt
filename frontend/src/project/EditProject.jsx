@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 const EditProject = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     manager: "",
@@ -13,19 +14,23 @@ const EditProject = () => {
     endDate: "",
     technicians: [],
   });
-  const [users, setUsers] = useState([]);
 
-  // ✅ Fetch technicians
+  const [users, setUsers] = useState([]);
+  const [managers, setManagers] = useState([]);
+
+  // ✅ Fetch users (both Technicians & Managers)
   useEffect(() => {
-    const fetchTechnicians = async () => {
+    const fetchUsers = async () => {
       try {
         const res = await axios.get("http://localhost:3000/api/auth/users");
-        setUsers(res.data.filter((u) => u.role === "Technician"));
+        const allUsers = res.data;
+        setUsers(allUsers.filter((u) => u.role === "Technician"));
+        setManagers(allUsers.filter((u) => u.role === "Manager"));
       } catch (err) {
-        toast.error("Failed to fetch technicians");
+        toast.error("❌ Failed to fetch users");
       }
     };
-    fetchTechnicians();
+    fetchUsers();
   }, []);
 
   // ✅ Fetch existing project data
@@ -41,15 +46,17 @@ const EditProject = () => {
           technicians: res.data.technicians || [],
         });
       } catch (err) {
-        toast.error("Failed to fetch project");
+        toast.error("❌ Failed to fetch project");
       }
     };
     fetchProject();
   }, [id]);
 
+  // ✅ Handle input change
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // ✅ Add technician to project
   const handleTechnicianSelect = (e) => {
     const techId = e.target.value;
     if (techId && !formData.technicians.includes(techId)) {
@@ -60,6 +67,7 @@ const EditProject = () => {
     }
   };
 
+  // ✅ Remove technician
   const handleRemoveTechnician = (techId) => {
     setFormData({
       ...formData,
@@ -67,6 +75,7 @@ const EditProject = () => {
     });
   };
 
+  // ✅ Submit updated project
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -82,8 +91,9 @@ const EditProject = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-100 to-blue-100 py-10 px-4 flex flex-col items-center">
+      {/* Header */}
       <div className="w-full max-w-4xl flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800"> Edit Project</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Edit Project</h1>
         <button
           onClick={handleBack}
           className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition"
@@ -92,6 +102,7 @@ const EditProject = () => {
         </button>
       </div>
 
+      {/* Form Card */}
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Project Name */}
@@ -110,23 +121,28 @@ const EditProject = () => {
             />
           </div>
 
-          {/* Manager */}
+          {/* Manager Dropdown */}
           <div>
             <label className="block font-semibold text-gray-700 mb-1">
               Manager Name
             </label>
-            <input
-              type="text"
+            <select
               name="manager"
               value={formData.manager}
               onChange={handleChange}
-              placeholder="Enter manager name"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
               required
-            />
+            >
+              <option value="">Select Manager</option>
+              {managers.map((m) => (
+                <option key={m._id} value={m.name}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Dates */}
+          {/* Start & End Dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-semibold text-gray-700 mb-1">
@@ -155,14 +171,14 @@ const EditProject = () => {
             </div>
           </div>
 
-          {/* Technicians */}
+          {/* Technicians Dropdown */}
           <div>
             <label className="block font-semibold text-gray-700 mb-1">
               Assign Technicians
             </label>
             <select
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
               onChange={handleTechnicianSelect}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
             >
               <option value="">Select Technician</option>
               {users.map((u) => (
@@ -172,6 +188,7 @@ const EditProject = () => {
               ))}
             </select>
 
+            {/* Selected Technicians */}
             {formData.technicians.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {formData.technicians.map((id) => {
@@ -212,6 +229,7 @@ const EditProject = () => {
 };
 
 export default EditProject;
+
 
 
 
