@@ -43,17 +43,17 @@ const ProjectList = () => {
     }
   };
 
-  const handleBack = () => navigate("/dashboard");
+  const handleAdd = () => navigate("/AddProject");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-100 to-blue-100 py-10 px-4 flex flex-col items-center">
       <div className="w-full max-w-6xl flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Project List</h1>
         <button
-          onClick={handleBack}
+          onClick={handleAdd}
           className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition"
         >
-          ← Back
+          Add Project 
         </button>
       </div>
 

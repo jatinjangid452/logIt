@@ -84,6 +84,9 @@ const LogList = () => {
   const handleBack = () => {
     navigate("/dashboard");
   };
+  const handleAdd = () => {
+    navigate("/logForm/AddLogEntry");
+  };
 
   const filteredLogs = logs
     .filter((log) =>
@@ -267,6 +270,13 @@ const LogList = () => {
           </button>
         </div>
       </div>
+
+      <button
+        onClick={handleAdd}
+        className="px-3 py-1 bg-black text-white rounded hover:bg-gray-800 mb-4"
+      >
+        Add Logs Tsk
+      </button>
 
       <table className="w-full border-collapse border border-gray-300">
         <thead>

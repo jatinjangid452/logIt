@@ -63,7 +63,7 @@ const AddProject = () => {
     }
   };
 
-  const handleBack = () => navigate("/projects/list");
+  const handleBack = () => navigate("/dashboard");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-100 to-blue-100 py-10 px-4 flex flex-col items-center">

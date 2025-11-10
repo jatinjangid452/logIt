@@ -6,6 +6,20 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import "jspdf-autotable";
 import { FaUserCircle } from "react-icons/fa";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 export default function Dashboard() {
   const navigate = useNavigate();
   // const [leavesOpen, setLeavesOpen] = useState(false);
@@ -538,7 +552,63 @@ const exportPDF = () => {
           </div>
         )}
         </main>
+
+        {/* 📈 Charts Section */}
+        <div className="mt-10 p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Bar Chart - Overall Summary */}
+          <div className="bg-white p-4 rounded-xl shadow-lg">
+            <h2 className="text-lg font-semibold mb-4 text-gray-700">
+              Overall Performance Overview
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={[
+                  { name: "Tasks", value: logs.length },
+                  { name: "Avg Rating", value: parseFloat(avgRating) || 0 },
+                  { name: "Pending Ratings", value: pendingCount },
+                  { name: "Completed Ratings", value: completeratingCount },
+                ]}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="rgb(59,130,246)" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Pie Chart - Rating Distribution */}
+          <div className="bg-white p-4 rounded-xl shadow-lg">
+            <h2 className="text-lg font-semibold mb-4 text-gray-700">
+              Rating Completion Status
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={[
+                    { name: "Pending Ratings", value: pendingCount },
+                    { name: "Completed Ratings", value: completeratingCount },
+                  ]}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label
+                >
+                  <Cell fill="rgb(30,50,246)" /> 
+                  <Cell fill="rgb(59,130,246)" />
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     </div>
+    
   );
 }
