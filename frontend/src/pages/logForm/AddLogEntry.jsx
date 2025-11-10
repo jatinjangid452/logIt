@@ -77,7 +77,7 @@ const AddLogEntry = () => {
         project_name: selectedProject?.name,
       });
       toast.success("✅ Log entry added successfully!");
-      navigate("/dashboard");
+      navigate("/logForm/LogList");
     } catch (err) {
       console.error(err);
       toast.error("❌ Failed to add log entry");
