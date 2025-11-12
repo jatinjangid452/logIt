@@ -309,10 +309,23 @@ const LogList = () => {
                 </td>
                 <td className="border px-4 py-2">{log.task_type}</td>
                 <td className="border px-4 py-2">{log.description}</td>
-                <td className="border px-4 py-2">
-                  {new Date(log.date_time).toLocaleString("en-IN", {
-                    timeZone: "Asia/Kolkata",
-                  })}
+                <td className="border px-4 py-2">{log.date_time? (() => 
+                {
+                  const d = new Date(log.date_time);
+                  const datePart = d.toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        });
+                        const timePart = d.toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: true,
+                        });
+                        return `${datePart} ${timePart}`;
+                      })()
+                    : "-"}
                 </td>
 
                 <td className="border px-4 py-2">

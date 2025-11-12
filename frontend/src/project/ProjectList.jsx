@@ -80,8 +80,10 @@ const ProjectList = () => {
                 >
                   <td className="px-4 py-3">{p.name}</td>
                   <td className="px-4 py-3">{p.manager}</td>
-                  <td className="px-4 py-3">{p.startDate?.split("T")[0]}</td>
-                  <td className="px-4 py-3">{p.endDate?.split("T")[0] || "-"}</td>
+                  {/* <td className="px-4 py-3">{p.startDate?.split("T")[0]}</td>
+                  <td className="px-4 py-3">{p.endDate?.split("T")[0] || "-"}</td> */}
+                  <td>{p.startDate? new Date(p.startDate).toLocaleDateString("en-US", {month: "long",day: "numeric",year: "numeric",}): "-"}</td>
+                  <td>{p.endDate? new Date(p.endDate).toLocaleDateString("en-US", {month: "long",day: "numeric",year: "numeric",}): "-"}</td>
                   <td className="px-4 py-3">
                     {p.technicians && p.technicians.length
                       ? p.technicians
