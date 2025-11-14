@@ -57,34 +57,32 @@ const ProjectList = () => {
         </button>
       </div>
 
-      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+      <div className="w-full max-w-6xl bg-white border border-gray-200">
         {projects.length ? (
-          <table className="w-full border-collapse">
-            <thead className="bg-blue-100 text-gray-800">
-              <tr>
-                <th className="px-4 py-3 text-left font-semibold">Project Name</th>
-                <th className="px-4 py-3 text-left font-semibold">Manager</th>
-                <th className="px-4 py-3 text-left font-semibold">Start Date</th>
-                <th className="px-4 py-3 text-left font-semibold">End Date</th>
-                <th className="px-4 py-3 text-left font-semibold">Technicians</th>
-                <th className="px-4 py-3 text-center font-semibold">Actions</th>
+          <table className="w-full border-collapse border border-gray-300">
+            <thead >
+              <tr className="bg-gray-200">
+                <th className="border px-4 py-2">Project Name</th>
+                <th className="border px-4 py-2">Manager</th>
+                <th className="border px-4 py-2">Start Date</th>
+                <th className="border px-4 py-2">End Date</th>
+                <th className="border px-4 py-2">Technicians</th>
+                <th className="border px-4 py-2">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white" style={{textAlign:"center"}}>
               {projects.map((p, index) => (
                 <tr
                   key={p._id}
-                  className={`border-t hover:bg-blue-50 transition ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  }`}
+                  className="border px-4 py-2"
                 >
-                  <td className="px-4 py-3">{p.name}</td>
-                  <td className="px-4 py-3">{p.manager}</td>
-                  {/* <td className="px-4 py-3">{p.startDate?.split("T")[0]}</td>
-                  <td className="px-4 py-3">{p.endDate?.split("T")[0] || "-"}</td> */}
-                  <td>{p.startDate? new Date(p.startDate).toLocaleDateString("en-US", {month: "long",day: "numeric",year: "numeric",}): "-"}</td>
-                  <td>{p.endDate? new Date(p.endDate).toLocaleDateString("en-US", {month: "long",day: "numeric",year: "numeric",}): "-"}</td>
-                  <td className="px-4 py-3">
+                  <td className="border px-4 py-2">{p.name}</td>
+                  <td className="border px-4 py-2">{p.manager}</td>
+                  {/* <td className="border px-4 py-2">{p.startDate?.split("T")[0]}</td>
+                  <td className="border px-4 py-2">{p.endDate?.split("T")[0] || "-"}</td> */}
+                  <td className="border px-4 py-2">{p.startDate? new Date(p.startDate).toLocaleDateString("en-US", {month: "long",day: "numeric",year: "numeric",}): "-"}</td>
+                  <td className="border px-4 py-2">{p.endDate? new Date(p.endDate).toLocaleDateString("en-US", {month: "long",day: "numeric",year: "numeric",}): "-"}</td>
+                  <td className="border px-4 py-2">
                     {p.technicians && p.technicians.length
                       ? p.technicians
                           .map((id) => users.find((u) => u._id === id)?.name)
@@ -92,7 +90,7 @@ const ProjectList = () => {
                           .join(", ")
                       : "—"}
                   </td>
-                  <td className="px-4 py-3 text-center space-x-2">
+                  <td className="border px-4 py-2 text-center space-x-2">
                      <Link
                         to={`/projects/edit/${p._id}`}
                         className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition"

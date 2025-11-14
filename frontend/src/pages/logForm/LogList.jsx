@@ -292,7 +292,7 @@ const LogList = () => {
           </tr>
         </thead>
 
-        <tbody className="bg-white">
+        <tbody className="bg-white" style={{textAlign:"center"}}>
           {filteredLogs.length > 0 ? (
             filteredLogs.map((log) => (
               <tr key={log._id}>
