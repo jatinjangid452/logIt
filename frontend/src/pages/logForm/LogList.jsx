@@ -4,7 +4,6 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { FaStar, FaRegStar } from "react-icons/fa";
-import background from '/images3.jpeg';
 const LogList = () => {
   const [logs, setLogs] = useState([]);
   const [users, setUsers] = useState([]);
