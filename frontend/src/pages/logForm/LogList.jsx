@@ -14,6 +14,8 @@ const LogList = () => {
     JSON.parse(localStorage.getItem("user"))
   );
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filterTechnician, setFilterTechnician] = useState("");
   const [filterTaskType, setFilterTaskType] = useState("");
@@ -22,6 +24,7 @@ const LogList = () => {
   const [filterEndDate, setFilterEndDate] = useState("");
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [filterProjectName, setFilterProjectName] = useState("");
 
   useEffect(() => {
     fetchLogs();
@@ -89,6 +92,13 @@ const LogList = () => {
 
   const filteredLogs = logs
     .filter((log) =>
+      filterProjectName
+        ? (log.project_name || "")
+            .toLowerCase()
+            .includes(filterProjectName.toLowerCase())
+        : true
+    )
+    .filter((log) =>
       log.description.toLowerCase().includes(searchKeyword.toLowerCase())
     )
     .filter((log) =>
@@ -136,6 +146,15 @@ const LogList = () => {
       return 0;
     });
 
+    const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
+
+    const indexOfLast = currentPage * itemsPerPage;
+    const indexOfFirst = indexOfLast - itemsPerPage;
+
+    const currentLogs = filteredLogs.slice(indexOfFirst, indexOfLast);
+   console.log(currentLogs)
+    const goToPage = (num) => setCurrentPage(num);
+
   return (
     <div className="min-h-screen p-6 bg-cover bg-center bg-no-repeat">
       <button
@@ -153,6 +172,16 @@ const LogList = () => {
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-600 mb-1">Project Name</label>
+            <input
+              type="text"
+              placeholder="e.g. CRM App"
+              value={filterProjectName}
+              onChange={(e) => setFilterProjectName(e.target.value)}
+              className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
           <div className="flex flex-col">
             <label className="text-sm text-gray-600 mb-1">Description</label>
             <input
@@ -262,6 +291,7 @@ const LogList = () => {
               setFilterEndDate("");
               setSortField("");
               setSortOrder("asc");
+              setFilterProjectName("");
             }}
             className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition"
           >
@@ -292,8 +322,8 @@ const LogList = () => {
         </thead>
 
         <tbody className="bg-white" style={{textAlign:"center"}}>
-          {filteredLogs.length > 0 ? (
-            filteredLogs.map((log) => (
+          {currentLogs.length > 0 ? (
+            currentLogs.map((log) => (
               <tr key={log._id}>
                 <td className="border px-4 py-2">
                   {log.project_name || "N/A"}
@@ -399,7 +429,37 @@ const LogList = () => {
           )}
         </tbody>
       </table>
+       <div className="flex justify-center mt-4 gap-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => goToPage(currentPage - 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goToPage(i + 1)}
+            className={`px-3 py-1 rounded ${
+              currentPage === i + 1 ? "bg-black text-white" : "bg-gray-200"
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => goToPage(currentPage + 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
+    
   );
 };
 
