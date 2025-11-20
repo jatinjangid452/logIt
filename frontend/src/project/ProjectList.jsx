@@ -43,18 +43,27 @@ const ProjectList = () => {
     }
   };
 
-  const handleAdd = () => navigate("/AddProject");
+  // const handleAdd = () => navigate("/AddProject");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray-100 to-blue-100 py-10 px-4 flex flex-col items-center">
       <div className="w-full max-w-6xl flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Project List</h1>
-        <button
+        {/* <button
           onClick={handleAdd}
           className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition"
         >
           Add Project 
-        </button>
+        </button> */}
+        <div style={{marginBottom: "20px"}}>
+              <Link
+                to={`/AddProject`}
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition"
+                title="Add"
+              >
+                Add Logs Tsk
+              </Link>
+            </div>
       </div>
 
       <div className="w-full max-w-6xl bg-white border border-gray-200">
