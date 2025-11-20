@@ -30,7 +30,21 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const entries = await LogEntry.find();
-    res.json(entries);
+    // res.json(entries);
+     const withProjectNames = await Promise.all(
+      entries.map(async (entry) => {
+        const project = await Project.findById(entry.project);
+
+        return {
+          ...entry._doc,
+          project_name: project ? project.name : entry.project_name, 
+          // If project exists use latest name 
+          // otherwise fallback to stored project_name
+        };
+      })
+    );
+
+    res.json(withProjectNames);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });

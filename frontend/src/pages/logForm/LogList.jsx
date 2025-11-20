@@ -152,7 +152,6 @@ const LogList = () => {
     const indexOfFirst = indexOfLast - itemsPerPage;
 
     const currentLogs = filteredLogs.slice(indexOfFirst, indexOfLast);
-   console.log(currentLogs)
     const goToPage = (num) => setCurrentPage(num);
 
   return (
