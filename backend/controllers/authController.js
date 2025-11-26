@@ -2,21 +2,72 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+// const registerUser = async (req, res) => {
+//   try {
+//     const { name, email, password, role } = req.body;
+//      const normalizedEmail = email.toLowerCase();
+//     const existingUser = await User.findOne({ normalizedEmail });
+//     if (existingUser) {
+//       return res.status(400).json({ message: "User already exists" });
+//     }
+
+//     const salt = await bcrypt.genSalt(10);
+//     const hashedPassword = await bcrypt.hash(password, salt);
+
+//     const user = await User.create({
+//       name,
+//       email : normalizedEmail,
+//       password: hashedPassword,
+//       role,
+//     });
+
+//     res.status(201).json({
+//       message: "User registered successfully",
+//       user,
+//     });
+//   } catch (err) {
+//     console.error("Registration error:", err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-     const normalizedEmail = email.toLowerCase();
-    const existingUser = await User.findOne({ normalizedEmail });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
+    const normalizedEmail = email.toLowerCase();
+
+    const emailExists = await User.findOne({ email: normalizedEmail });
+    if (emailExists) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+
+    const nameAndRoleExists = await User.findOne({ 
+      name: name.trim(), 
+      role 
+    });
+
+    if (nameAndRoleExists) {
+      return res.status(400).json({ message: "Name already exists with same role" });
+    }
+    const allUsers = await User.find();
+    for (const u of allUsers) {
+      const isSamePassword = await bcrypt.compare(password, u.password);
+      if (isSamePassword) {
+        return res.status(400).json({ message: "Password already used by another user" });
+      }
+    }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await User.create({
       name,
-      email : normalizedEmail,
+      email: normalizedEmail,
       password: hashedPassword,
       role,
     });
@@ -25,6 +76,7 @@ const registerUser = async (req, res) => {
       message: "User registered successfully",
       user,
     });
+
   } catch (err) {
     console.error("Registration error:", err);
     res.status(500).json({ message: "Server error" });

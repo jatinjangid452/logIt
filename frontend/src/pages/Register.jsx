@@ -8,13 +8,26 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+
+  // field-wise errors
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [roleError, setRoleError] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // clear previous errors
+    setNameError("");
+    setEmailError("");
+    setPasswordError("");
+    setRoleError("");
+
     if (!role) {
-      alert("Please select a role");
+      setRoleError("Please select a role");
       return;
     }
 
@@ -28,24 +41,28 @@ export default function Register() {
 
       alert("Registration successful!");
       navigate("/login");
+
     } catch (err) {
-      console.error("Registration error:", err);
-      alert("Registration failed. Please try again.");
+      const msg = err.response?.data?.message;
+
+      if (msg) {
+        if (msg.includes("Email")) setEmailError(msg);
+        else if (msg.includes("Name")) setNameError(msg);
+        else if (msg.includes("Password")) setPasswordError(msg);
+        else if (msg.includes("role")) setRoleError(msg);
+      } else {
+        setEmailError("Registration failed. Try again.");
+      }
     }
   };
 
   return (
     <div className="flex min-h-screen">
       <div className="hidden md:flex w-1/2 flex-col justify-center items-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white p-12">
-        <img
-          src={logo}
-          alt="Platform Logo"
-          className="w-40 h-40 object-contain mb-6 drop-shadow-lg"
-        />
+        <img src={logo} alt="Platform Logo" className="w-40 h-40 mb-6 drop-shadow-lg" />
         <h2 className="text-3xl font-bold mb-4">Join Our Platform</h2>
-        <p className="text-center text-lg leading-relaxed max-w-md">
-          Create your free account and explore powerful tools to manage your
-          work, collaborate with your team, and grow your productivity.
+        <p className="text-center text-lg max-w-md">
+          Create your free account and explore powerful tools.
         </p>
       </div>
 
@@ -56,44 +73,61 @@ export default function Register() {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
 
-            <input
-              type="email"
-              className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            {/* NAME FIELD */}
+            <div>
+              <input
+                className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+              {nameError && <p className="text-red-600 text-sm">{nameError}</p>}
+            </div>
 
-            <input
-              type="password"
-              className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            {/* EMAIL FIELD */}
+            <div>
+              <input
+                type="email"
+                className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              {emailError && <p className="text-red-600 text-sm">{emailError}</p>}
+            </div>
 
-            <select
-              className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-            >
-              <option value="">Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="Technician">Technician</option>
-              <option value="Manager">Manager</option>
-              <option value="Viewer">Viewer</option>
-            </select>
+            {/* PASSWORD FIELD */}
+            <div>
+              <input
+                type="password"
+                className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
+            </div>
+
+            {/* ROLE FIELD */}
+            <div>
+              <select
+                className="w-full rounded-lg border px-4 py-2 text-gray-700 focus:border-indigo-500 focus:outline-none"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                required
+              >
+                <option value="">Select Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Technician">Technician</option>
+                <option value="Manager">Manager</option>
+                <option value="Viewer">Viewer</option>
+              </select>
+              {roleError && <p className="text-red-600 text-sm">{roleError}</p>}
+            </div>
 
             <button
               type="submit"
@@ -114,4 +148,3 @@ export default function Register() {
     </div>
   );
 }
-
